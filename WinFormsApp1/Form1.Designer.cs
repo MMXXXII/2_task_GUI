@@ -130,6 +130,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            FormClosing += Form1_FormClosing;
             Name = "Form1";
             Text = "Form1";
             ResumeLayout(false);

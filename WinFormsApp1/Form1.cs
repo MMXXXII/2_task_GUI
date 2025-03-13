@@ -75,13 +75,14 @@ namespace WinFormsApp1
         }
 
         // Обработчик события закрытия формы
+        // Обработчик события закрытия формы
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Сохранение данных о сторонах в настройки при закрытии формы
             Properties.Settings.Default.SideA = textBox1.Text;
             Properties.Settings.Default.SideB = textBox2.Text;
             Properties.Settings.Default.SideC = textBox3.Text;
-            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Save(); // Сохраняем изменения
         }
     }
 
