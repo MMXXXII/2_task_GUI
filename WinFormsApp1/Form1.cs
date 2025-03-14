@@ -1,106 +1,100 @@
 namespace WinFormsApp1
 {
+    // Основной класс формы
     public partial class Form1 : Form
     {
-        // Конструктор формы, инициализация компонентов
+        // Конструктор формы
         public Form1()
         {
-            InitializeComponent();
-            // Восстановление данных при открытии формы из настроек
-            textBox1.Text = Properties.Settings.Default.SideA;
-            textBox2.Text = Properties.Settings.Default.SideB;
-            textBox3.Text = Properties.Settings.Default.SideC;
+            InitializeComponent(); // Инициализация компонентов формы
+            LoadSavedSides();      // Загрузка сохранённых сторон при запуске
         }
 
         // Обработчик кнопки для проверки существования треугольника
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // Вызов обобщённой функции проверки треугольника на существование
-            CheckTriangle((a, b, c) => Triangle.Exists(a, b, c), "существует");
-        }
+        private void button1_Click(object sender, EventArgs e) =>
+            CheckTriangle(Triangle.Exists, "существует");
 
         // Обработчик кнопки для проверки на прямоугольность
         private void button2_Click(object sender, EventArgs e)
         {
-            // Попытка получить стороны треугольника и проверить существование
+            // Получение сторон и проверка существования треугольника
             if (TryGetSides(out int a, out int b, out int c) && Triangle.Exists(a, b, c))
             {
-                // Если треугольник существует, проверяем его прямоугольность
+                // Сообщение о прямоугольности треугольника
                 MessageBox.Show(Triangle.IsRightTriangle(a, b, c) ?
                     "Треугольник является прямоугольным" :
                     "Треугольник не является прямоугольным", "Проверка на прямоугольность");
             }
             else
             {
-                // Если треугольник не существует, сообщаем, что проверка на прямоугольность невозможна
+                // Сообщение об ошибке, если треугольник не существует
                 MessageBox.Show("Треугольник не существует, проверка на прямоугольность невозможна", "Ошибка");
             }
         }
 
-        // Обобщённая функция для проверки свойств треугольника
-        // triangleCheck — это делегат, который определяет, какой тип проверки будет выполнен
-        private void CheckTriangle(Func<int, int, int, bool> triangleCheck, string checkType)
+        // Метод для проверки свойств треугольника (существование или прямоугольность)
+        private void CheckTriangle(Func<int, int, int, bool> check, string checkType)
         {
-            // Получение сторон треугольника и проверка их корректности
+            // Проверяем корректность ввода и существование треугольника
             if (TryGetSides(out int a, out int b, out int c))
             {
-                // Если проверка проходит, показываем сообщение с результатом
-                string message = triangleCheck(a, b, c)
-                    ? $"Треугольник со сторонами {a}, {b}, {c} {checkType}"
-                    : $"Треугольник со сторонами {a}, {b}, {c} не {checkType}";
-                MessageBox.Show(message, $"Проверка {checkType}");
+                MessageBox.Show(check(a, b, c) ?
+                    $"Треугольник со сторонами {a}, {b}, {c} {checkType}" :
+                    $"Треугольник со сторонами {a}, {b}, {c} не {checkType}", $"Проверка {checkType}");
             }
         }
 
-        // Функция для получения сторон треугольника из текстовых полей
+        // Метод для получения сторон треугольника из текстовых полей
         private bool TryGetSides(out int a, out int b, out int c)
         {
-            // Инициализация значений сторон
-            a = b = c = 0;
+            a = b = c = 0; // Инициализация сторон нулями
 
-            // Попытка преобразовать введённые строки в целые числа
-            bool isValid = int.TryParse(textBox1.Text, out a) &&
-                           int.TryParse(textBox2.Text, out b) &&
-                           int.TryParse(textBox3.Text, out c);
+            // Попытка преобразования текстовых полей в числа
+            bool validInput = int.TryParse(textBox1.Text, out a) &&
+                              int.TryParse(textBox2.Text, out b) &&
+                              int.TryParse(textBox3.Text, out c) &&
+                              a > 0 && b > 0 && c > 0;
 
-            // Если хотя бы одно значение некорректно или меньше или равно нулю, выводим сообщение об ошибке
-            if (!isValid || a <= 0 || b <= 0 || c <= 0)
+            // Вывод сообщения об ошибке при некорректных данных
+            if (!validInput)
             {
                 MessageBox.Show("Введите корректные положительные целые числа", "Ошибка ввода");
-                return false;
             }
-
-            // Если данные корректны, возвращаем true
-            return true;
+            return validInput;
         }
 
-        // Обработчик события закрытия формы
+        // Метод для загрузки сохранённых данных о сторонах треугольника
+        private void LoadSavedSides()
+        {
+            textBox1.Text = Properties.Settings.Default.SideA;
+            textBox2.Text = Properties.Settings.Default.SideB;
+            textBox3.Text = Properties.Settings.Default.SideC;
+        }
+
         // Обработчик события закрытия формы
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Сохранение данных о сторонах в настройки при закрытии формы
+            // Сохранение данных о сторонах в настройки
             Properties.Settings.Default.SideA = textBox1.Text;
             Properties.Settings.Default.SideB = textBox2.Text;
             Properties.Settings.Default.SideC = textBox3.Text;
-            Properties.Settings.Default.Save(); // Сохраняем изменения
+            Properties.Settings.Default.Save(); // Сохранение настроек
         }
     }
 
     // Класс для работы с треугольниками
     public class Triangle
     {
-        // Метод для проверки существования треугольника
+        // Проверка существования треугольника по неравенству треугольника
         public static bool Exists(int a, int b, int c) =>
-            a > 0 && b > 0 && c > 0 && (a + b > c) && (a + c > b) && (b + c > a);
+            a > 0 && b > 0 && c > 0 && a + b > c && a + c > b && b + c > a;
 
-        // Метод для проверки, является ли треугольник прямоугольным
+        // Проверка, является ли треугольник прямоугольным (по теореме Пифагора)
         public static bool IsRightTriangle(int a, int b, int c)
         {
             int[] sides = { a, b, c };
-            // Сортировка сторон для того, чтобы гипотенуза была последней стороной
-            Array.Sort(sides);
-            // Проверка теоремы Пифагора для прямоугольного треугольника
-            return Math.Pow(sides[0], 2) + Math.Pow(sides[1], 2) == Math.Pow(sides[2], 2);
+            Array.Sort(sides); // Сортировка для корректного определения гипотенузы
+            return sides[0] * sides[0] + sides[1] * sides[1] == sides[2] * sides[2];
         }
     }
 }
