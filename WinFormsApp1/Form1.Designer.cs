@@ -35,7 +35,6 @@
             textBox2 = new TextBox();
             textBox3 = new TextBox();
             button1 = new Button();
-            button2 = new Button();
             label4 = new Label();
             SuspendLayout();
             // 
@@ -89,23 +88,13 @@
             // 
             // button1
             // 
-            button1.Location = new Point(38, 226);
+            button1.Location = new Point(144, 222);
             button1.Name = "button1";
-            button1.Size = new Size(250, 29);
+            button1.Size = new Size(164, 29);
             button1.TabIndex = 6;
-            button1.Text = "Проверить на существование";
+            button1.Text = "Рассчитать";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(38, 261);
-            button2.Name = "button2";
-            button2.Size = new Size(250, 29);
-            button2.TabIndex = 7;
-            button2.Text = "Проверить на прямоугольность";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
             // 
             // label4
             // 
@@ -120,9 +109,8 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(435, 554);
+            ClientSize = new Size(422, 307);
             Controls.Add(label4);
-            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(textBox3);
             Controls.Add(textBox2);
@@ -130,9 +118,9 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
-            FormClosing += Form1_FormClosing;
             Name = "Form1";
             Text = "Form1";
+            FormClosing += Form1_FormClosing;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -146,7 +134,6 @@
         private TextBox textBox2;
         private TextBox textBox3;
         private Button button1;
-        private Button button2;
         private Label label4;
     }
 }

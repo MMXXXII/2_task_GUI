@@ -1,50 +1,38 @@
+
 namespace WinFormsApp1
 {
-    // Основной класс формы
     public partial class Form1 : Form
     {
+        private string filePath = "sides.txt"; // Путь к файлу для сохранения данных
+
         // Конструктор формы
         public Form1()
         {
             InitializeComponent(); // Инициализация компонентов формы
-            LoadSavedSides();      // Загрузка сохранённых сторон при запуске
+            LoadSavedSides();      // Загрузка сохранённых сторон из файла при запуске
         }
 
-        // Обработчик кнопки для проверки существования треугольника
-        private void button1_Click(object sender, EventArgs e) =>
-            CheckTriangle(Triangle.Exists, "существует");
-
-        // Обработчик кнопки для проверки на прямоугольность
-        private void button2_Click(object sender, EventArgs e)
+        // Обработчик кнопки для проверки существования треугольника и его прямоугольности
+        private void button1_Click(object sender, EventArgs e)
         {
-            // Получение сторон и проверка существования треугольника
-            if (TryGetSides(out int a, out int b, out int c) && Triangle.Exists(a, b, c))
-            {
-                // Сообщение о прямоугольности треугольника
-                MessageBox.Show(Triangle.IsRightTriangle(a, b, c) ?
-                    "Треугольник является прямоугольным" :
-                    "Треугольник не является прямоугольным", "Проверка на прямоугольность");
-            }
-            else
-            {
-                // Сообщение об ошибке, если треугольник не существует
-                MessageBox.Show("Треугольник не существует, проверка на прямоугольность невозможна", "Ошибка");
-            }
-        }
-
-        // Метод для проверки свойств треугольника (существование или прямоугольность)
-        private void CheckTriangle(Func<int, int, int, bool> check, string checkType)
-        {
-            // Проверяем корректность ввода и существование треугольника
+            // Получение сторон и проверка их корректности
             if (TryGetSides(out int a, out int b, out int c))
             {
-                MessageBox.Show(check(a, b, c) ?
-                    $"Треугольник со сторонами {a}, {b}, {c} {checkType}" :
-                    $"Треугольник со сторонами {a}, {b}, {c} не {checkType}", $"Проверка {checkType}");
+                if (Triangle.Exists(a, b, c))
+                {
+                    string message = Triangle.IsRightTriangle(a, b, c)
+                        ? "Треугольник существует и является прямоугольным."
+                        : "Треугольник существует, но не является прямоугольным.";
+                    MessageBox.Show(message, "Результат проверки");
+                }
+                else
+                {
+                    MessageBox.Show("Треугольник не существует.", "Результат проверки");
+                }
             }
         }
 
-        // Метод для получения сторон треугольника из текстовых полей
+        // Метод для проверки свойств треугольника (существование и прямоугольность)
         private bool TryGetSides(out int a, out int b, out int c)
         {
             a = b = c = 0; // Инициализация сторон нулями
@@ -63,22 +51,26 @@ namespace WinFormsApp1
             return validInput;
         }
 
-        // Метод для загрузки сохранённых данных о сторонах треугольника
+        // Метод для загрузки сохранённых данных о сторонах из файла
         private void LoadSavedSides()
         {
-            textBox1.Text = Properties.Settings.Default.SideA;
-            textBox2.Text = Properties.Settings.Default.SideB;
-            textBox3.Text = Properties.Settings.Default.SideC;
+            if (File.Exists(filePath))
+            {
+                var lines = File.ReadAllLines(filePath);
+                if (lines.Length >= 3)
+                {
+                    textBox1.Text = lines[0];
+                    textBox2.Text = lines[1];
+                    textBox3.Text = lines[2];
+                }
+            }
         }
 
         // Обработчик события закрытия формы
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Сохранение данных о сторонах в настройки
-            Properties.Settings.Default.SideA = textBox1.Text;
-            Properties.Settings.Default.SideB = textBox2.Text;
-            Properties.Settings.Default.SideC = textBox3.Text;
-            Properties.Settings.Default.Save(); // Сохранение настроек
+            // Сохранение данных о сторонах в файл
+            File.WriteAllLines(filePath, new string[] { textBox1.Text, textBox2.Text, textBox3.Text });
         }
     }
 

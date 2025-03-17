@@ -22,41 +22,5 @@ namespace WinFormsApp1.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string SideA {
-            get {
-                return ((string)(this["SideA"]));
-            }
-            set {
-                this["SideA"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string SideB {
-            get {
-                return ((string)(this["SideB"]));
-            }
-            set {
-                this["SideB"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string SideC {
-            get {
-                return ((string)(this["SideC"]));
-            }
-            set {
-                this["SideC"] = value;
-            }
-        }
     }
 }
