@@ -15,20 +15,41 @@ namespace WinFormsApp1
         // Обработчик кнопки для проверки существования треугольника и его прямоугольности
         private void button1_Click(object sender, EventArgs e)
         {
-            // Получение сторон и проверка их корректности
-            if (TryGetSides(out int a, out int b, out int c))
+            int a, b, c;
+
+            // Попытка получить значения сторон
+            if (int.TryParse(textBox1.Text, out a) && int.TryParse(textBox2.Text, out b) && int.TryParse(textBox3.Text, out c))
             {
-                if (Triangle.Exists(a, b, c))
+                // Проверка, что все стороны положительные
+                if (a > 0 && b > 0 && c > 0)
                 {
-                    string message = Triangle.IsRightTriangle(a, b, c)
-                        ? "Треугольник существует и является прямоугольным."
-                        : "Треугольник существует, но не является прямоугольным.";
-                    MessageBox.Show(message, "Результат проверки");
+                    // Проверка существования треугольника
+                    if (a + b > c && a + c > b && b + c > a)
+                    {
+                        // Проверка прямоугольности
+                        if (Math.Pow(a, 2) + Math.Pow(b, 2) == Math.Pow(c, 2) || Math.Pow(a, 2) + Math.Pow(c, 2) == Math.Pow(b, 2) || Math.Pow(b, 2) + Math.Pow(c, 2) == Math.Pow(a, 2))
+
+                        {
+                            MessageBox.Show("Треугольник существует и является прямоугольным.", "Результат проверки");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Треугольник существует, но не является прямоугольным.", "Результат проверки");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Треугольник не существует.", "Результат проверки");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Треугольник не существует.", "Результат проверки");
+                    MessageBox.Show("Стороны должны быть положительными числами.", "Ошибка ввода");
                 }
+            }
+            else
+            {
+                MessageBox.Show("Введите корректные целые числа для всех сторон.", "Ошибка ввода");
             }
         }
 
@@ -85,7 +106,6 @@ namespace WinFormsApp1
         public static bool IsRightTriangle(int a, int b, int c)
         {
             int[] sides = { a, b, c };
-            Array.Sort(sides); // Сортировка для корректного определения гипотенузы
             return sides[0] * sides[0] + sides[1] * sides[1] == sides[2] * sides[2];
         }
     }

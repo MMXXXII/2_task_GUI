@@ -118,8 +118,8 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
-            Name = "Form1";
-            Text = "Form1";
+            Name = "Проверка треугольника";
+            Text = "Проверка треугольника";
             FormClosing += Form1_FormClosing;
             ResumeLayout(false);
             PerformLayout();
